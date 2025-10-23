@@ -12,7 +12,8 @@
     "start": "next start",
     "lint": "eslint",
     "setup-db": "./setup-db.sh",
-    "db:setup": "./setup-db.sh"
+    "db:setup": "./setup-db.sh",
+    "vercel-build": "./vercel-build.sh"
   },
   "dependencies": {
     "bcryptjs": "^3.0.2",
