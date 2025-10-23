@@ -3,6 +3,12 @@ import { query } from '@/lib/database';
 
 export async function GET() {
   try {
+    // Check if DATABASE_URL is configured
+    if (!process.env.DATABASE_URL) {
+      console.warn('DATABASE_URL not configured, returning empty array');
+      return NextResponse.json([]);
+    }
+
     const result = await query(`
       SELECT t.*, 
              a.name as artist_name, a.bio as artist_bio, a.avatar_url as artist_avatar, a.nationality as artist_nationality,
@@ -19,10 +25,8 @@ export async function GET() {
     return NextResponse.json(result.rows);
   } catch (error) {
     console.error('Error fetching tracks:', error);
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    );
+    // Return empty array instead of error object to prevent frontend crash
+    return NextResponse.json([]);
   }
 }
 

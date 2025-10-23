@@ -17,9 +17,16 @@ function HomePageContent() {
   const loadTracks = async () => {
     try {
       const data = await fetchTracks();
-      setTracks(data);
+      // Check if data is an array (success) or error object
+      if (Array.isArray(data)) {
+        setTracks(data);
+      } else {
+        console.error('API returned non-array:', data);
+        setTracks([]);
+      }
     } catch (error) {
       console.error('Error loading tracks:', error);
+      setTracks([]);
     } finally {
       setLoading(false);
     }
