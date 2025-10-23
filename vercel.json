@@ -5,11 +5,6 @@
   "installCommand": "cd vietsoul-web && npm install --legacy-peer-deps",
   "devCommand": "cd vietsoul-web && npm run dev",
   "regions": ["sin1"],
-  "functions": {
-    "vietsoul-web/app/api/**/*.ts": {
-      "runtime": "nodejs18.x"
-    }
-  },
   "env": {
     "NODE_ENV": "production",
     "CI": "false",
