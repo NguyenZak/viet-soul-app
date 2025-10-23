@@ -1,7 +1,7 @@
 "use client";
 
 import { useAuth } from "../../hooks/useAuth";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { useEffect } from "react";
 import AdminSidebar from "../../components/AdminSidebar";
 import AdminTopbar from "../../components/AdminTopbar";
@@ -15,12 +15,21 @@ export default function AdminLayout({
 }) {
   const { user, loading } = useAuth();
   const router = useRouter();
+  const pathname = usePathname();
+
+  // Don't check auth for login page
+  const isLoginPage = pathname === "/admin/login";
 
   useEffect(() => {
-    if (!loading && !user) {
+    if (!loading && !user && !isLoginPage) {
         router.push("/admin/login");
     }
-  }, [user, loading, router]);
+  }, [user, loading, router, isLoginPage]);
+
+  // Show login page directly without auth check
+  if (isLoginPage) {
+    return <>{children}</>;
+  }
 
   if (loading) {
     return (
