@@ -1,0 +1,18 @@
+{
+  "name": "viet-soul-app",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "vietsoul-web"
+  ],
+  "scripts": {
+    "build": "cd vietsoul-web && npm run vercel-build",
+    "dev": "cd vietsoul-web && npm run dev",
+    "start": "cd vietsoul-web && npm start",
+    "install": "cd vietsoul-web && npm install --legacy-peer-deps"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
+  }
+}

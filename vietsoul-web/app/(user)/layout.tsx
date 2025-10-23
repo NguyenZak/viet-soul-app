@@ -1,5 +1,6 @@
 "use client";
 
+import { Suspense } from "react";
 import Sidebar from "../../components/Sidebar";
 import Topbar from "../../components/Topbar";
 import PlayerBar from "../../components/PlayerBar";
@@ -18,7 +19,13 @@ export default function UserLayout({
           <Sidebar />
         </aside>
         <main className="h-full rounded-lg bg-white/5 ring-1 ring-white/10 overflow-hidden backdrop-blur-sm">
-          <Topbar />
+          <Suspense fallback={
+            <div className="h-14 flex items-center justify-between px-4 border-b border-white/10">
+              <div className="text-neutral-400">Loading...</div>
+            </div>
+          }>
+            <Topbar />
+          </Suspense>
           <div className="h-[calc(100%-56px)] overflow-auto p-6">
             <PageTransition>{children}</PageTransition>
           </div>
