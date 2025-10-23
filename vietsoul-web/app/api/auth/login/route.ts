@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { query } from '@/lib/database';
-import { generateToken, comparePassword } from '@/lib/auth';
+import { query } from '../database.js';
+import { generateToken, comparePassword } from '../auth.js';
 
 export async function POST(request: NextRequest) {
   try {
