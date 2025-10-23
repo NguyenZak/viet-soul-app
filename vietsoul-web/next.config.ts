@@ -23,12 +23,6 @@ const nextConfig: NextConfig = {
     domains: ['res.cloudinary.com'],
     unoptimized: true
   },
-  // API routes configuration
-  api: {
-    bodyParser: {
-      sizeLimit: '10mb',
-    },
-  },
 };
 
 export default nextConfig;
