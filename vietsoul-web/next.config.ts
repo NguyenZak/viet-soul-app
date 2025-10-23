@@ -10,17 +10,24 @@ const nextConfig: NextConfig = {
   experimental: {
     staticGenerationRetryCount: 0,
   },
-  // Force all pages to be dynamic to prevent static generation issues
+  // Vercel optimization
   output: 'standalone',
-  // Disable static optimization completely
   trailingSlash: false,
-  // Skip static generation entirely
   skipTrailingSlashRedirect: true,
-  // Disable static export
-  distDir: '.next',
-  // Force dynamic rendering
+  // Disable static optimization to prevent build issues
   generateBuildId: async () => {
-    return 'dynamic-build'
+    return 'vercel-build'
+  },
+  // Image optimization
+  images: {
+    domains: ['res.cloudinary.com'],
+    unoptimized: true
+  },
+  // API routes configuration
+  api: {
+    bodyParser: {
+      sizeLimit: '10mb',
+    },
   },
 };
 

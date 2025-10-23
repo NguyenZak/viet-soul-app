@@ -1,0 +1,21 @@
+# Vercel Environment Variables
+# Add these in your Vercel dashboard under Settings > Environment Variables
+
+# Cloudinary Configuration
+NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME=your_cloud_name
+CLOUDINARY_API_KEY=your_api_key
+CLOUDINARY_API_SECRET=your_api_secret
+
+# NextAuth Configuration
+NEXTAUTH_URL=https://your-app.vercel.app
+NEXTAUTH_SECRET=your_nextauth_secret
+
+# Backend API URL (if you have a separate backend)
+NEXT_PUBLIC_API_URL=https://your-api.vercel.app/api
+
+# Node Environment
+NODE_ENV=production
+
+# Build Configuration
+CI=false
+SKIP_ENV_VALIDATION=true
