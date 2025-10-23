@@ -1,0 +1,16 @@
+[
+  {
+    "id": 1760999137538,
+    "name": "Debug Test",
+    "description": "Test description",
+    "color": "#F97316",
+    "track_count": "0"
+  },
+  {
+    "id": 1760999216153,
+    "name": "Test UI Genre",
+    "description": "Test UI description",
+    "color": "#00FF00",
+    "track_count": "0"
+  }
+]
