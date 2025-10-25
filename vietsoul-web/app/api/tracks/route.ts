@@ -34,18 +34,31 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     
-    const { title, artist, src, cover_url, lrc_url, genre, album } = body;
+    const { title, artist, src, cover_url, lrc_url, genre, album, artist_id, genre_id, album_id, composer_id } = body;
     
-    if (!title || !artist || !src) {
+    if (!title || !src) {
       return NextResponse.json(
-        { error: 'Title, artist, and src are required' },
+        { error: 'Title and src are required' },
         { status: 400 }
       );
     }
 
     const result = await query(
-      'INSERT INTO tracks (title, artist, src, cover_url, lrc_url, genre, album) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *',
-      [title, artist, src, cover_url || null, lrc_url || null, genre || 'Unknown', album || 'Unknown']
+      `INSERT INTO tracks (title, artist, src, cover_url, lrc_url, genre, album, artist_id, genre_id, album_id, composer_id) 
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) RETURNING *`,
+      [
+        title, 
+        artist || null, 
+        src, 
+        cover_url || null, 
+        lrc_url || null, 
+        genre || null, 
+        album || null,
+        artist_id || null,
+        genre_id || null,
+        album_id || null,
+        composer_id || null
+      ]
     );
 
     return NextResponse.json(result.rows[0]);

@@ -11,6 +11,9 @@ export async function POST(request: NextRequest) {
         const artist = formData.get('artist') as string;
         const genre = formData.get('genre') as string;
         const album = formData.get('album') as string;
+        const artistId = formData.get('artistId') as string;
+        const genreId = formData.get('genreId') as string;
+        const albumId = formData.get('albumId') as string;
         const audio = formData.get('audio') as File;
         const cover = formData.get('cover') as File;
         const lyrics = formData.get('lyrics') as File;
@@ -46,8 +49,11 @@ export async function POST(request: NextRequest) {
         const trackData = {
           title,
           artist,
-          genre: genre || 'Unknown',
-          album: album || 'Unknown',
+          genre: genre || null,
+          album: album || null,
+          artist_id: artistId ? parseInt(artistId) : null,
+          genre_id: genreId ? parseInt(genreId) : null,
+          album_id: albumId ? parseInt(albumId) : null,
           src: uploadResults.audioUrl || '',
           cover_url: uploadResults.coverUrl || '/next.svg',
           lrc_url: uploadResults.lyricsUrl || null

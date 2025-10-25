@@ -174,6 +174,9 @@ export default function AdminTracks() {
       formData.append('artist', artistName);
       formData.append('genre', genreName);
       formData.append('album', albumName);
+      formData.append('artistId', trackInfo.artistId);
+      formData.append('genreId', trackInfo.genreId);
+      if (trackInfo.albumId) formData.append('albumId', trackInfo.albumId);
       
       if (files.audio) formData.append('audio', files.audio);
       if (files.cover) formData.append('cover', files.cover);
@@ -265,6 +268,9 @@ export default function AdminTracks() {
         artist: artistName,
         genre: genreName,
         album: albumName,
+        artist_id: parseInt(editForm.artistId),
+        genre_id: parseInt(editForm.genreId),
+        album_id: editForm.albumId ? parseInt(editForm.albumId) : null,
         src: editingTrack.src,
         cover_url: editingTrack.cover_url,
         lrc_url: editingTrack.lrc_url
