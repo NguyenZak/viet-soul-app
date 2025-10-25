@@ -65,7 +65,7 @@ export default function Topbar() {
         {user ? (
           <>
             <div className="text-sm text-neutral-300 hidden sm:block">{user.name}</div>
-            <button onClick={logout} className="text-sm px-3 py-1.5 rounded-full bg-white/10 hover:bg-white/15">Đăng xuất</button>
+            <button onClick={() => { logout(); router.replace('/login'); }} className="text-sm px-3 py-1.5 rounded-full bg-white/10 hover:bg-white/15">Đăng xuất</button>
           </>
         ) : (
           <button onClick={() => router.push('/login')} className="text-sm px-3 py-1.5 rounded-full bg-white text-black hover:opacity-90">Đăng nhập</button>

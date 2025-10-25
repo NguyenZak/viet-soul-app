@@ -6,8 +6,8 @@ import { useRouter } from "next/navigation";
 import { User, Lock, Mail, Eye, EyeOff } from "lucide-react";
 
 export default function AdminLoginPage() {
-  const [email, setEmail] = useState("demo@vietsoul.app");
-  const [password, setPassword] = useState("demo123");
+  const [email, setEmail] = useState("admin@vietsoul.app");
+  const [password, setPassword] = useState("admin123");
   const [name, setName] = useState("");
   const [isLogin, setIsLogin] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
@@ -25,14 +25,15 @@ export default function AdminLoginPage() {
     try {
       if (isLogin) {
         await login(email, password);
-        router.push("/admin");
+        // Redirect immediately to admin dashboard
+        router.replace("/admin");
       } else {
         await register(email, password, name);
-        router.push("/admin");
+        // Redirect immediately to admin dashboard
+        router.replace("/admin");
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : "Có lỗi xảy ra");
-    } finally {
       setLoading(false);
     }
   };
@@ -162,12 +163,12 @@ export default function AdminLoginPage() {
           </div>
         </div>
 
-        {/* Demo Credentials */}
+        {/* Admin Credentials */}
         <div className="mt-6 bg-purple-800/20 border border-purple-500/20 rounded-lg p-4">
-          <h3 className="text-purple-200 font-medium mb-2">Demo Credentials:</h3>
+          <h3 className="text-purple-200 font-medium mb-2">Admin Credentials:</h3>
           <div className="text-purple-300 text-sm space-y-1">
-            <p><strong>Email:</strong> demo@vietsoul.app</p>
-            <p><strong>Password:</strong> demo123</p>
+            <p><strong>Email:</strong> admin@vietsoul.app</p>
+            <p><strong>Password:</strong> admin123</p>
           </div>
         </div>
       </div>

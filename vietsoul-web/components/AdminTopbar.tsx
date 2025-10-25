@@ -1,10 +1,17 @@
 "use client";
 
 import { useAuth } from "../hooks/useAuth";
+import { useRouter } from "next/navigation";
 import { LogOut, User } from "lucide-react";
 
 export default function AdminTopbar() {
   const { user, logout } = useAuth();
+  const router = useRouter();
+
+  const handleLogout = () => {
+    logout();
+    router.replace("/admin/login");
+  };
 
   return (
     <div className="h-14 px-6 flex items-center justify-between border-b border-white/10">
@@ -23,7 +30,7 @@ export default function AdminTopbar() {
           Xin chào, <span className="text-white font-medium">{user?.name}</span>
         </div>
         <button
-          onClick={logout}
+          onClick={handleLogout}
           className="size-8 grid place-items-center rounded bg-white/10 hover:bg-white/15 text-neutral-400 hover:text-white transition-colors"
           title="Đăng xuất"
         >

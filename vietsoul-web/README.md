@@ -1,237 +1,341 @@
-# VietSoul - Vietnamese Music Streaming App
+# 🎵 VietSoul - Music Streaming Platform
 
-A modern Vietnamese music streaming application built with Next.js 15, PostgreSQL, and Cloudinary.
+VietSoul là một nền tảng streaming nhạc Việt Nam hiện đại, được xây dựng với Next.js 15, PostgreSQL, và Cloudinary.
 
-## 🚀 Quick Start
+![Next.js](https://img.shields.io/badge/Next.js-15.0.3-black)
+![React](https://img.shields.io/badge/React-19.1.0-blue)
+![TypeScript](https://img.shields.io/badge/TypeScript-5-blue)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-14+-blue)
 
-### Prerequisites
-- Node.js 18+ 
-- PostgreSQL
-- npm or yarn
+## ✨ Tính Năng
 
-### 1. Install Dependencies
+- 🎵 **Streaming nhạc** - Phát nhạc trực tuyến mượt mà
+- 🎤 **Quản lý nghệ sĩ** - Thông tin chi tiết về ca sĩ, nhạc sĩ
+- 💿 **Albums & Playlists** - Tổ chức nhạc theo album và playlist
+- 🎨 **Giao diện đẹp** - UI hiện đại, responsive
+- 🔐 **Admin Panel** - Quản lý nội dung dễ dàng
+- 📝 **Lyrics hiển thị** - Hiển thị lời bài hát đồng bộ (.lrc)
+- 🎨 **Player tùy chỉnh** - Audio player với đầy đủ tính năng
+- ☁️ **Cloud Storage** - Lưu trữ media trên Cloudinary
+
+## 🚀 Bắt Đầu
+
+### Yêu Cầu Hệ Thống
+
+- Node.js 20.x trở lên
+- PostgreSQL 14 trở lên
+- npm 8.x trở lên
+
+### 1. Clone Repository
+
+```bash
+git clone https://github.com/NguyenZak/viet-soul-app.git
+cd viet-soul-app/vietsoul-web
+```
+
+### 2. Cài Đặt Dependencies
+
 ```bash
 npm install --legacy-peer-deps
 ```
 
-### 2. Setup Environment Variables
-Copy `env.example` to `.env.local` and update the values:
-```bash
-cp env.example .env.local
-```
-
 ### 3. Setup Database
-```bash
-# Start PostgreSQL (if not running)
-brew services start postgresql  # macOS
-# or
-sudo service postgresql start    # Ubuntu
 
-# Run database setup
-./setup-db.sh
+#### Option 1: Dùng Script Tự Động (macOS/Linux)
+
+```bash
+# Đảm bảo PostgreSQL đã được cài đặt
+brew install postgresql@14
+brew services start postgresql@14
+
+# Chạy script setup
+cd ..
+chmod +x quick-db-setup.sh
+./quick-db-setup.sh
 ```
 
-### 4. Start Development Server
+#### Option 2: Setup Thủ Công
+
+```bash
+# Tạo database
+createdb vietsoul
+
+# Import schema
+psql -d vietsoul -f lib/schema.sql
+```
+
+### 4. Cấu Hình Environment Variables
+
+Tạo file `.env.local`:
+
+```bash
+# Database
+DATABASE_URL=postgresql://localhost:5432/vietsoul
+
+# JWT Secret for authentication
+JWT_SECRET=your-super-secret-jwt-key-change-this-in-production
+
+# NextAuth
+NEXTAUTH_URL=http://localhost:3000
+NEXTAUTH_SECRET=your-nextauth-secret-change-this-in-production
+
+# Cloudinary (Optional - để upload media)
+CLOUDINARY_CLOUD_NAME=your_cloud_name
+CLOUDINARY_API_KEY=your_api_key
+CLOUDINARY_API_SECRET=your_api_secret
+```
+
+**Lưu ý:** Thay đổi các giá trị `secret` trong production!
+
+### 5. Tạo Admin User
+
+```bash
+# Sử dụng psql
+psql -d vietsoul
+
+# Trong psql console:
+INSERT INTO users (email, password_hash, name) 
+VALUES (
+  'admin@vietsoul.app',
+  '$2b$10$sAFe2lOfALGfSjgswQCEm.t/OOuJPsqMMT2RF1zDeE7RZxA6iDxxO',
+  'Admin'
+);
+```
+
+**Thông tin đăng nhập:**
+- Email: `admin@vietsoul.app`
+- Password: `admin123`
+
+### 6. Chạy Development Server
+
 ```bash
 npm run dev
 ```
 
-## 🏗️ Build for Production
-
-### Local Build
-```bash
-./build.sh
-npm start
-```
-
-### Vercel Build
-```bash
-./vercel-build.sh
-```
-
-## 🚀 Vercel Deployment
-
-### 1. Connect to Vercel
-1. Go to [Vercel Dashboard](https://vercel.com/dashboard)
-2. Click "New Project"
-3. Import your GitHub repository
-4. Select the `vietsoul-web` folder as the root directory
-
-### 2. Configure Build Settings
-In Vercel project settings:
-- **Framework Preset**: Next.js
-- **Build Command**: `npm run vercel-build`
-- **Output Directory**: `.next`
-- **Install Command**: `npm install --legacy-peer-deps`
-
-### 3. Environment Variables
-Add these environment variables in Vercel dashboard:
+Hoặc sử dụng script tiện lợi:
 
 ```bash
-# Database Configuration
-DATABASE_URL=postgresql://user:password@host:port/database
-
-# JWT Secret
-JWT_SECRET=your-super-secret-jwt-key-here
-
-# Cloudinary Configuration
-NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME=your_cloud_name
-CLOUDINARY_API_KEY=your_api_key
-CLOUDINARY_API_SECRET=your_api_secret
-
-# NextAuth Configuration
-NEXTAUTH_URL=https://your-app.vercel.app
-NEXTAUTH_SECRET=your_secret_key
-
-# Vercel Specific
-CI=false
-SKIP_ENV_VALIDATION=true
-NODE_ENV=production
+cd ..
+chmod +x start-dev.sh
+./start-dev.sh
 ```
 
-### 4. Deploy
-1. Click "Deploy" in Vercel dashboard
-2. Wait for build to complete
-3. Your app will be available at `https://your-app.vercel.app`
+Server sẽ chạy tại: http://localhost:3000
 
-## 🔧 Troubleshooting Vercel Build Issues
+## 📱 Sử Dụng
 
-### Common Issues and Solutions:
+### User Interface
 
-#### 1. Module Not Found Error
-**Problem**: `Module not found: Can't resolve '@/lib/database'`
+- **Trang chủ:** http://localhost:3000
+- **Nghệ sĩ:** http://localhost:3000/artist/[slug]
+- **Thể loại:** http://localhost:3000/genre/[slug]
+- **Album:** http://localhost:3000/album/[slug]
 
-**Solution**:
-- Ensure all import paths use the `@/` alias correctly
-- Check that files exist in the `lib/` directory
-- Verify `tsconfig.json` has correct path mapping:
-  ```json
-  {
-    "compilerOptions": {
-      "paths": {
-        "@/*": ["./*"]
-      }
-    }
-  }
-  ```
+### Admin Panel
 
-#### 2. Build Command Issues
-**Problem**: Build fails with custom build script
+- **Login:** http://localhost:3000/admin/login
+- **Dashboard:** http://localhost:3000/admin
+- **Quản lý tracks:** http://localhost:3000/admin/tracks
+- **Quản lý artists:** http://localhost:3000/admin/artists
+- **Quản lý genres:** http://localhost:3000/admin/genres
+- **Quản lý albums:** http://localhost:3000/admin/albums
 
-**Solution**:
-- Use `npm run vercel-build` as build command
-- Ensure `vercel-build.sh` is executable: `chmod +x vercel-build.sh`
-- Check that script handles the 500.html file creation
+**Đăng nhập Admin:**
+- Email: `admin@vietsoul.app`
+- Password: `admin123`
 
-#### 3. Environment Variables
-**Problem**: API routes fail due to missing environment variables
-
-**Solution**:
-- Add all required environment variables in Vercel dashboard
-- Use `SKIP_ENV_VALIDATION=true` to bypass validation
-- Ensure `DATABASE_URL` is properly formatted
-
-#### 4. Case Sensitivity Issues
-**Problem**: Build works locally but fails on Vercel
-
-**Solution**:
-- Configure Git to be case-sensitive: `git config core.ignorecase false`
-- Ensure all file names and imports match exactly
-- Check for duplicate files with different cases
-
-### Build Scripts Explained:
-
-#### `vercel-build.sh`
-This script handles the Vercel-specific build process:
-- Sets environment variables for Vercel
-- Creates required directories
-- Handles the 500.html file creation
-- Runs the Next.js build
-- Applies workarounds for known issues
-
-#### `build.sh`
-This script handles local builds:
-- Similar to vercel-build.sh but for local development
-- Creates build artifacts for production testing
-
-## 📁 Project Structure
+## 🏗️ Cấu Trúc Project
 
 ```
 vietsoul-web/
-├── app/                    # Next.js App Router
-│   ├── (user)/            # User-facing pages
-│   ├── admin/             # Admin dashboard
-│   └── api/               # API routes
-├── components/            # React components
-├── lib/                   # Utility libraries
-│   ├── database.ts       # PostgreSQL connection
-│   ├── auth.ts           # Authentication utilities
-│   └── schema.sql        # Database schema
-├── store/                 # Zustand state management
-├── public/                # Static assets
-├── vercel.json           # Vercel configuration
-├── vercel-build.sh       # Vercel build script
-└── build.sh              # Local build script
+├── app/                      # Next.js App Router
+│   ├── (user)/              # User-facing pages
+│   │   ├── page.tsx         # Trang chủ
+│   │   ├── artist/[id]/     # Trang nghệ sĩ
+│   │   ├── genre/[id]/      # Trang thể loại
+│   │   └── album/[id]/      # Trang album
+│   ├── admin/               # Admin pages
+│   │   ├── login/           # Admin login
+│   │   ├── tracks/          # Quản lý tracks
+│   │   ├── artists/         # Quản lý artists
+│   │   └── genres/          # Quản lý genres
+│   └── api/                 # API routes
+│       ├── auth/            # Authentication
+│       ├── tracks/          # Tracks API
+│       └── upload/          # Upload API
+├── components/              # React components
+├── lib/                     # Libraries & utilities
+│   ├── database.ts          # Database connection
+│   ├── auth.ts              # Authentication
+│   └── schema.sql           # Database schema
+├── store/                   # Zustand state management
+├── hooks/                   # Custom React hooks
+└── public/                  # Static assets
 ```
 
-## 🔧 API Endpoints
+## 🛠️ Scripts
+
+```bash
+npm run dev          # Chạy development server
+npm run build        # Build production
+npm run start        # Chạy production server
+npm run lint         # Chạy ESLint
+npm run setup-db     # Setup database
+```
+
+## 🌐 Deploy Lên Production
+
+### Deploy lên Vercel
+
+1. **Tạo database trên Neon/Supabase:**
+   - Truy cập: https://neon.tech hoặc https://supabase.com
+   - Tạo project mới
+   - Copy connection string
+
+2. **Deploy lên Vercel:**
+   ```bash
+   # Cài Vercel CLI
+   npm i -g vercel
+   
+   # Deploy
+   vercel
+   ```
+
+3. **Cấu hình Environment Variables trên Vercel:**
+   - Vào Project Settings → Environment Variables
+   - Thêm các biến:
+     - `DATABASE_URL`
+     - `JWT_SECRET`
+     - `NEXTAUTH_URL` (URL production)
+     - `NEXTAUTH_SECRET`
+     - `CLOUDINARY_*` (nếu dùng)
+
+4. **Import database schema:**
+   - Copy nội dung `lib/schema.sql`
+   - Chạy trong SQL Editor của Neon/Supabase
+
+### Deploy Manual
+
+Xem file `VERCEL_DEPLOY_GUIDE.md` để biết chi tiết.
+
+## 📊 Database Schema
+
+Database bao gồm các bảng:
+
+- `users` - Người dùng
+- `artists` - Ca sĩ
+- `composers` - Nhạc sĩ
+- `genres` - Thể loại
+- `albums` - Albums
+- `tracks` - Bài hát
+- `playlists` - Playlists
+- `playlist_tracks` - Tracks trong playlist
+
+Xem chi tiết trong `lib/schema.sql`
+
+## 🔐 Authentication
+
+- Sử dụng **JWT** cho authentication
+- Passwords được hash bằng **bcrypt**
+- Session được lưu trong **localStorage**
+
+## 📝 API Endpoints
 
 ### Authentication
-- `POST /api/auth/register` - User registration
-- `POST /api/auth/login` - User login
-- `GET /api/auth/me` - Get current user
 
-### Music Data
-- `GET /api/tracks` - Get all tracks
-- `POST /api/tracks` - Create track (admin)
-- `PUT /api/tracks` - Update track (admin)
-- `DELETE /api/tracks` - Delete track (admin)
-
-### Other Endpoints
-- `GET /api/artists` - Get all artists
-- `GET /api/albums` - Get all albums
-- `GET /api/genres` - Get all genres
-
-## 🗄️ Database Schema
-
-The application uses PostgreSQL with the following main tables:
-- `users` - User accounts
-- `artists` - Music artists
-- `composers` - Music composers
-- `genres` - Music genres
-- `albums` - Music albums
-- `tracks` - Music tracks
-- `playlists` - User playlists
-
-## 🛠️ Development
-
-### Available Scripts
-- `npm run dev` - Start development server
-- `npm run build` - Build for production
-- `npm start` - Start production server
-- `npm run setup-db` - Setup database
-- `npm run vercel-build` - Build for Vercel
-- `./build.sh` - Build with workaround
-- `./vercel-build.sh` - Build for Vercel
-
-### Troubleshooting
-
-#### Build Issues
-If you encounter build errors related to missing files:
-```bash
-./build.sh  # Uses workaround for Next.js build issues
+```
+POST /api/auth/login       # Đăng nhập
+POST /api/auth/register    # Đăng ký
+GET  /api/auth/me          # Lấy thông tin user hiện tại
 ```
 
-#### Database Connection Issues
-1. Ensure PostgreSQL is running
-2. Check DATABASE_URL in .env.local
-3. Run `./setup-db.sh` to recreate database
+### Tracks
 
-#### Import Path Issues
-The project uses `@/` alias for imports. If you see import errors:
-1. Check tsconfig.json has path mapping
-2. Use `@/lib/...` instead of relative paths
+```
+GET    /api/tracks         # Lấy danh sách tracks
+POST   /api/tracks         # Tạo track mới
+PUT    /api/tracks         # Cập nhật track
+DELETE /api/tracks?id=:id  # Xóa track
+```
 
-## 📝 License
+### Artists
 
-This project is licensed under the MIT License.
+```
+GET    /api/artists        # Lấy danh sách artists
+POST   /api/artists        # Tạo artist mới
+PUT    /api/artists/:id    # Cập nhật artist
+DELETE /api/artists/:id    # Xóa artist
+```
+
+### Genres
+
+```
+GET    /api/genres         # Lấy danh sách genres
+POST   /api/genres         # Tạo genre mới
+PUT    /api/genres/:id     # Cập nhật genre
+DELETE /api/genres/:id     # Xóa genre
+```
+
+## 🎨 Tech Stack
+
+- **Frontend:** Next.js 15, React 19, TypeScript
+- **Styling:** Tailwind CSS 4
+- **State Management:** Zustand
+- **Database:** PostgreSQL
+- **ORM:** pg (node-postgres)
+- **Authentication:** JWT, bcrypt
+- **Media Storage:** Cloudinary
+- **Audio:** HTML5 Audio API, HLS.js
+
+## 🐛 Troubleshooting
+
+### Lỗi: "DATABASE_URL not configured"
+
+Đảm bảo file `.env.local` đã được tạo và chứa `DATABASE_URL`.
+
+### Lỗi: "Port 3000 already in use"
+
+```bash
+# Kill process đang dùng port 3000
+lsof -ti:3000 | xargs kill -9
+```
+
+### Lỗi: Login không hoạt động
+
+1. Kiểm tra `JWT_SECRET` đã được set trong `.env.local`
+2. Restart dev server
+3. Clear localStorage trong browser
+
+### Lỗi: "relation does not exist"
+
+Chạy lại schema:
+```bash
+psql -d vietsoul -f lib/schema.sql
+```
+
+## 📄 License
+
+MIT License - Xem file LICENSE để biết chi tiết.
+
+## 👥 Contributors
+
+- **NguyenZak** - Initial work
+
+## 🤝 Contributing
+
+Pull requests are welcome! Để contribute:
+
+1. Fork repository
+2. Tạo branch mới (`git checkout -b feature/AmazingFeature`)
+3. Commit changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to branch (`git push origin feature/AmazingFeature`)
+5. Mở Pull Request
+
+## 📧 Contact
+
+- GitHub: [@NguyenZak](https://github.com/NguyenZak)
+- Repository: [viet-soul-app](https://github.com/NguyenZak/viet-soul-app)
+
+---
+
+Made with ❤️ in Vietnam 🇻🇳
