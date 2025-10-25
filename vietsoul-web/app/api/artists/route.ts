@@ -1,29 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getLocalArtists, addLocalArtist } from '../../../lib/artists-storage';
 
-const API_BASE = 'http://localhost:3001/api';
-
 export async function GET() {
   try {
-    // First load from backend
-    const res = await fetch(`${API_BASE}/artists`);
-    const backendArtists = await res.json();
-    
-    // Transform to simpler format for frontend
-    const simplifiedArtists = backendArtists.map((artist: any) => ({
-      id: artist.id,
-      name: artist.name,
-      bio: artist.bio,
-      avatar_url: artist.avatar_url,
-      nationality: artist.nationality,
-      track_count: artist.track_count
-    }));
-    
-    // Merge with local artists
     const localArtists = await getLocalArtists();
-    const allArtists = [...simplifiedArtists, ...localArtists];
-    
-    return NextResponse.json(allArtists);
+    return NextResponse.json(localArtists);
   } catch (error) {
     console.error('Error fetching artists:', error);
     return NextResponse.json(

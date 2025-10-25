@@ -1,23 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { updateLocalGenre, deleteLocalGenre } from '../../../../lib/genres-storage';
 
-const API_BASE = 'http://localhost:3001/api';
-
 export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
   try {
     const body = await request.json();
     const id = parseInt(params.id);
     
-    // Check if it's a backend genre (numeric ID) or local genre
-    if (id < 1000) {
-      // This is a backend genre, we can't update it
-      return NextResponse.json(
-        { error: 'Cannot update backend genres' },
-        { status: 400 }
-      );
-    }
-    
-    // Update local genre
+    // Update genre
     const updatedGenre = await updateLocalGenre(id, body);
     if (!updatedGenre) {
       return NextResponse.json(
@@ -47,16 +36,7 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
       );
     }
     
-    // Check if it's a backend genre (numeric ID) or local genre
-    if (id < 1000) {
-      // This is a backend genre, we can't delete it
-      return NextResponse.json(
-        { error: 'Cannot delete backend genres' },
-        { status: 400 }
-      );
-    }
-    
-    // Delete local genre
+    // Delete genre
     const success = await deleteLocalGenre(id);
     if (!success) {
       return NextResponse.json(

@@ -1,23 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { updateLocalArtist, deleteLocalArtist } from '../../../../lib/artists-storage';
 
-const API_BASE = 'http://localhost:3001/api';
-
 export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
   try {
     const body = await request.json();
     const id = parseInt(params.id);
     
-    // Check if it's a backend artist (numeric ID) or local artist
-    if (id < 1000) {
-      // This is a backend artist, we can't update it
-      return NextResponse.json(
-        { error: 'Cannot update backend artists' },
-        { status: 400 }
-      );
-    }
-    
-    // Update local artist
+    // Update artist
     const updatedArtist = await updateLocalArtist(id, body);
     if (!updatedArtist) {
       return NextResponse.json(
@@ -47,16 +36,7 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
       );
     }
     
-    // Check if it's a backend artist (numeric ID) or local artist
-    if (id < 1000) {
-      // This is a backend artist, we can't delete it
-      return NextResponse.json(
-        { error: 'Cannot delete backend artists' },
-        { status: 400 }
-      );
-    }
-    
-    // Delete local artist
+    // Delete artist
     const success = await deleteLocalArtist(id);
     if (!success) {
       return NextResponse.json(
