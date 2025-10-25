@@ -22,7 +22,15 @@ export async function GET() {
       LEFT JOIN genres g ON t.genre_id = g.id
       ORDER BY t.created_at DESC
     `);
-    return NextResponse.json(result.rows);
+    
+    // Format response to include genre and album fields for backwards compatibility
+    const formattedTracks = result.rows.map((track: any) => ({
+      ...track,
+      genre: track.genre_name || 'Unknown',
+      album: track.album_title || 'Unknown'
+    }));
+    
+    return NextResponse.json(formattedTracks);
   } catch (error) {
     console.error('Error fetching tracks:', error);
     // Return empty array instead of error object to prevent frontend crash
@@ -34,7 +42,7 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     
-    const { title, artist, src, cover_url, lrc_url, genre, album, artist_id, genre_id, album_id, composer_id } = body;
+    const { title, artist, src, cover_url, lrc_url, artist_id, genre_id, album_id, composer_id } = body;
     
     if (!title || !src) {
       return NextResponse.json(
@@ -44,16 +52,14 @@ export async function POST(request: NextRequest) {
     }
 
     const result = await query(
-      `INSERT INTO tracks (title, artist, src, cover_url, lrc_url, genre, album, artist_id, genre_id, album_id, composer_id) 
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) RETURNING *`,
+      `INSERT INTO tracks (title, artist, src, cover_url, lrc_url, artist_id, genre_id, album_id, composer_id) 
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *`,
       [
         title, 
         artist || null, 
         src, 
         cover_url || null, 
         lrc_url || null, 
-        genre || null, 
-        album || null,
         artist_id || null,
         genre_id || null,
         album_id || null,

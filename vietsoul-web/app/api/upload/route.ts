@@ -49,8 +49,6 @@ export async function POST(request: NextRequest) {
         const trackData = {
           title,
           artist,
-          genre: genre || null,
-          album: album || null,
           artist_id: artistId ? parseInt(artistId) : null,
           genre_id: genreId ? parseInt(genreId) : null,
           album_id: albumId ? parseInt(albumId) : null,

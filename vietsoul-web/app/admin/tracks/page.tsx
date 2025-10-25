@@ -266,8 +266,6 @@ export default function AdminTracks() {
       await updateTrack(editingTrack.id, {
         title: editForm.title,
         artist: artistName,
-        genre: genreName,
-        album: albumName,
         artist_id: parseInt(editForm.artistId),
         genre_id: parseInt(editForm.genreId),
         album_id: editForm.albumId ? parseInt(editForm.albumId) : null,
