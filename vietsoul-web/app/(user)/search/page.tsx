@@ -1,12 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { mockSearch } from "../../../lib/search";
 import TrackCard from "../../../components/TrackCard";
 import Link from "next/link";
 
-export default function SearchPage() {
+function SearchContent() {
   const params = useSearchParams();
   const q = params.get("q") ?? "";
   const [loading, setLoading] = useState(false);
@@ -78,4 +78,17 @@ export default function SearchPage() {
   );
 }
 
-
+export default function SearchPage() {
+  return (
+    <Suspense fallback={
+      <div className="space-y-8">
+        <div className="flex items-center justify-between">
+          <h1 className="text-2xl font-semibold">Tìm kiếm</h1>
+        </div>
+        <div className="text-neutral-400">Đang tải...</div>
+      </div>
+    }>
+      <SearchContent />
+    </Suspense>
+  );
+}

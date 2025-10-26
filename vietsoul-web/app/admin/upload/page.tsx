@@ -217,7 +217,7 @@ export default function AdminUploadPage() {
             </select>
           </div>
           <div>
-            <label className="block text-sm font-medium text-white mb-2">Thể loại *</nlabel>
+            <label className="block text-sm font-medium text-white mb-2">Thể loại *</label>
             <select
               value={trackInfo.genreId}
               onChange={(e) => {
