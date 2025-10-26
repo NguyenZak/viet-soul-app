@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import { createPortal } from "react-dom";
 import { Trash2, Edit, Plus, X, Save, Upload, Image } from "lucide-react";
 import { fetchArtists, createArtist, updateArtist, deleteArtist } from "../../../lib/api";
 
@@ -293,10 +294,10 @@ export default function AdminArtists() {
       </div>
 
       {/* Modal */}
-      {showModal && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-neutral-800 rounded-lg p-6 w-full max-w-md mx-4">
-            <div className="flex items-center justify-between mb-4">
+      {showModal && typeof document !== 'undefined' && createPortal(
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-[99999] p-4">
+          <div className="bg-neutral-800 rounded-lg w-full max-w-md max-h-[90vh] flex flex-col">
+            <div className="flex items-center justify-between p-6 pb-4 border-b border-neutral-700">
               <h2 className="text-lg font-semibold text-white">
                 {editingArtist ? 'Chỉnh sửa nghệ sĩ' : 'Thêm nghệ sĩ mới'}
               </h2>
@@ -308,7 +309,7 @@ export default function AdminArtists() {
               </button>
             </div>
 
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <form id="artist-form" onSubmit={handleSubmit} className="flex-1 overflow-y-auto px-6 py-4 space-y-4">
               <div>
                 <label className="block text-sm font-medium text-white mb-2">
                   Tên nghệ sĩ *
@@ -443,35 +444,43 @@ export default function AdminArtists() {
                 </div>
               </div>
 
-              <div className="flex gap-3 pt-4">
-                <button
-                  type="submit"
-                  disabled={submitting}
-                  className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-                >
-                  {submitting ? (
-                    <>
-                      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                      Đang lưu...
-                    </>
-                  ) : (
-                    <>
-                      <Save size={16} />
-                      {editingArtist ? 'Cập nhật' : 'Thêm mới'}
-                    </>
-                  )}
-                </button>
-                <button
-                  type="button"
-                  onClick={closeModal}
-                  className="px-4 py-2 bg-neutral-600 text-white rounded-lg hover:bg-neutral-700 transition-colors"
-                >
-                  Hủy
-                </button>
-              </div>
             </form>
+            
+            <div className="flex gap-3 p-6 pt-4 border-t border-neutral-700">
+              <button
+                type="submit"
+                form="artist-form"
+                disabled={submitting}
+                className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                onClick={(e) => {
+                  e.preventDefault();
+                  const form = document.getElementById('artist-form') as HTMLFormElement;
+                  if (form) form.requestSubmit();
+                }}
+              >
+                {submitting ? (
+                  <>
+                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                    Đang lưu...
+                  </>
+                ) : (
+                  <>
+                    <Save size={16} />
+                    {editingArtist ? 'Cập nhật' : 'Thêm mới'}
+                  </>
+                )}
+              </button>
+              <button
+                type="button"
+                onClick={closeModal}
+                className="px-4 py-2 bg-neutral-600 text-white rounded-lg hover:bg-neutral-700 transition-colors"
+              >
+                Hủy
+              </button>
+            </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </div>
   );

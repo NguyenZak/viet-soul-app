@@ -1,16 +1,9 @@
 [
   {
-    "id": 1760999137538,
-    "name": "Debug Test",
-    "description": "Test description",
-    "color": "#F97316",
-    "track_count": "0"
-  },
-  {
-    "id": 1760999216153,
-    "name": "Test UI Genre",
-    "description": "Test UI description",
-    "color": "#00FF00",
+    "id": 1761458895344,
+    "name": "R&B",
+    "description": "Đây là thể loại nhạc phổ biến",
+    "color": "#3B82F6",
     "track_count": "0"
   }
 ]

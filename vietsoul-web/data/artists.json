@@ -1,9 +1,9 @@
 [
   {
-    "id": 1760998250156,
-    "name": "Test Avatar Upload",
-    "bio": "Test bio with avatar",
-    "avatar_url": "https://res.cloudinary.com/eurosecuriy/image/upload/v1760998742/vietsoul/covers/artist_1760998740515_cover.webp",
+    "id": 1761458705067,
+    "name": "Sơn Tùng ",
+    "bio": "Là nghệ sĩ Việt nam ",
+    "avatar_url": "/uploads/artists/default.jpg",
     "nationality": "Việt Nam",
     "track_count": "0"
   }

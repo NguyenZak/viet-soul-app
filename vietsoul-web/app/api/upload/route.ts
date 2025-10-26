@@ -45,6 +45,15 @@ export async function POST(request: NextRequest) {
     
     console.log('Upload results:', uploadResults);
     
+    // Check if audio was uploaded successfully
+    if (!uploadResults.audioUrl) {
+      return NextResponse.json({
+        success: false,
+        error: 'Audio file upload failed',
+        details: 'No audio URL returned from upload'
+      }, { status: 400 });
+    }
+    
         // Create track in our local API
         const trackData = {
           title,
@@ -52,7 +61,7 @@ export async function POST(request: NextRequest) {
           artist_id: artistId ? parseInt(artistId) : null,
           genre_id: genreId ? parseInt(genreId) : null,
           album_id: albumId ? parseInt(albumId) : null,
-          src: uploadResults.audioUrl || '',
+          src: uploadResults.audioUrl,
           cover_url: uploadResults.coverUrl || '/next.svg',
           lrc_url: uploadResults.lyricsUrl || null
         };
@@ -67,7 +76,17 @@ export async function POST(request: NextRequest) {
       });
       
       const createdTrack = await response.json();
-      console.log('Track created:', createdTrack);
+      console.log('Track creation response:', { status: response.status, data: createdTrack });
+      
+      if (!response.ok) {
+        console.error('Failed to create track:', createdTrack);
+        return NextResponse.json({
+          success: false,
+          error: 'Failed to save track to database',
+          details: createdTrack.error || 'Unknown error',
+          data: uploadResults
+        }, { status: 500 });
+      }
       
       return NextResponse.json({
         success: true,
@@ -78,12 +97,12 @@ export async function POST(request: NextRequest) {
       });
     } catch (dbError) {
       console.error('Database error:', dbError);
-      // Still return upload success even if DB fails
       return NextResponse.json({
-        success: true,
-        data: uploadResults,
-        warning: 'Files uploaded but failed to save to database'
-      });
+        success: false,
+        error: 'Failed to save track to database',
+        details: dbError.message,
+        data: uploadResults
+      }, { status: 500 });
     }
     
   } catch (error) {
