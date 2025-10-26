@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getLocalGenres, addLocalGenre } from '../../../lib/genres-storage';
+import { query } from '@/lib/database';
 
 export async function GET() {
   try {
-    const localGenres = await getLocalGenres();
-    return NextResponse.json(localGenres);
+    const result = await query('SELECT * FROM genres ORDER BY id ASC');
+    return NextResponse.json(result.rows);
   } catch (error) {
     console.error('Error fetching genres:', error);
     return NextResponse.json(
@@ -18,19 +18,12 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     
-    // Create new genre with local ID
-    const newGenre = {
-      id: Date.now(), // Simple ID generation
-      name: body.name,
-      description: body.description,
-      color: body.color || '#3B82F6',
-      track_count: "0"
-    };
+    const result = await query(
+      'INSERT INTO genres (name, description, color) VALUES ($1, $2, $3) RETURNING *',
+      [body.name, body.description, body.color || '#3B82F6']
+    );
     
-    // Add to local storage
-    await addLocalGenre(newGenre);
-    
-    return NextResponse.json(newGenre);
+    return NextResponse.json(result.rows[0]);
   } catch (error) {
     console.error('Error creating genre:', error);
     return NextResponse.json(

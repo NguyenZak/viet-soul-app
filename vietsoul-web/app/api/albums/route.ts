@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getLocalAlbums, addLocalAlbum } from '../../../lib/albums-storage';
+import { query } from '@/lib/database';
 
 export async function GET() {
   try {
-    const localAlbums = await getLocalAlbums();
-    return NextResponse.json(localAlbums);
+    const result = await query('SELECT * FROM albums ORDER BY id ASC');
+    return NextResponse.json(result.rows);
   } catch (error) {
     console.error('Error fetching albums:', error);
     return NextResponse.json(
@@ -18,20 +18,18 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
     
-    // Create new album with local ID
-    const newAlbum = {
-      id: Date.now(), // Simple ID generation
-      title: body.title,
-      artist: body.artist,
-      release_year: body.release_year || new Date().getFullYear(),
-      cover_url: body.cover_url || '/uploads/albums/default.jpg',
-      track_count: "0"
-    };
+    const result = await query(
+      'INSERT INTO albums (title, description, cover_url, release_date, artist_id) VALUES ($1, $2, $3, $4, $5) RETURNING *',
+      [
+        body.title, 
+        body.description || '', 
+        body.cover_url || '/uploads/albums/default.jpg',
+        body.release_date || new Date().toISOString().split('T')[0],
+        body.artist_id || null
+      ]
+    );
     
-    // Add to local storage
-    await addLocalAlbum(newAlbum);
-    
-    return NextResponse.json(newAlbum);
+    return NextResponse.json(result.rows[0]);
   } catch (error) {
     console.error('Error creating album:', error);
     return NextResponse.json(
